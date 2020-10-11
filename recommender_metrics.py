@@ -1,25 +1,17 @@
+#import modules
+from surprise import accuracy
+
 #module including all methods that calculate the effectiveness of a recommender system
+class RecommenderMetrics:
 
-class RecommenderMetrics():
-    def __init__(self):
-        #self.actual_values
-        #self.predicted_values 
-        #get data in all needed forms from the evaluation data module
-        pass
+    def mean_absolute_error(self, predictions):
+        return accuracy.mae(predictions, verbose=False)
 
-    #mean absolute error
-    def MAE(self):
-        pass
-
-    #root mean square error
-    def RMSE(self):
-        pass
-
-    def hit_rate(self):
-        pass
+    def root_mean_square_error(self, predictions):
+        return accuracy.rmse(predictions, verbose=False)
 
     #leave one-out cross validation
-    def leave_one_out_CV(self):
+    def LOO_CV_hit_rate(self):
         pass
     
     def average_reciprocal_hit_rank(self):
