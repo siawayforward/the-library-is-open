@@ -8,4 +8,4 @@ Onward :muscle:
 
 ## Data
 
-The book information and ratings are compiled from the [goodreads API](https://www.goodreads.com/api){:target="_blank"}
+The book information and ratings are compiled from the [goodreads API](https://www.goodreads.com/api)
