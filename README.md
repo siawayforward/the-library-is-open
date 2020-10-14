@@ -1,4 +1,4 @@
-# tell-me-whattaa-want
+# the-library-is-open
 
 After learning about APIs and as a fan of machine learning algorithms, this is an attempt at creating a recommender system of books/authors for a user. It was originally supposed to be a book recommender system, but the API to use changed some main components this idea was centered around, so until then, we were going to do poems. However, we come back to books and find a way!
 
@@ -8,4 +8,8 @@ Onward :muscle:
 
 ## Data
 
+<<<<<<< HEAD
 The book information and ratings are compiled from the [goodreads API](https://www.goodreads.com/api)
+=======
+The book information and ratings are compiled from the [Open Library API](https://openlibrary.org/dev/docs/api/books)
+>>>>>>> 63a72a9... updated API documentation URL
