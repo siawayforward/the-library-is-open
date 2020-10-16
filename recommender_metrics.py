@@ -1,5 +1,6 @@
 #import modules
 from surprise import accuracy
+from algorithm_data import *
 
 #module including all methods that calculate the effectiveness of a recommender system
 class RecommenderMetrics:
