@@ -8,8 +8,4 @@ Onward :muscle:
 
 ## Data
 
-<<<<<<< HEAD
-The book information and ratings are compiled from the [goodreads API](https://www.goodreads.com/api)
-=======
-The book information and ratings are compiled from the [Open Library API](https://openlibrary.org/dev/docs/api/books)
->>>>>>> 63a72a9... updated API documentation URL
+The book information and ratings are compiled from the [Open Library API](https://openlibrary.org/dev/docs/api/books). The list of books itself is compiled from the [New York Times Bestseller's Books API](https://developer.nytimes.com/docs/books-product/1/overview). Because of access key compliance, the file that loads the list of book ISBNs is not included as it is just for the data generation stage.
