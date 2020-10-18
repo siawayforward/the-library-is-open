@@ -2,9 +2,13 @@
 #use surprise model_selection package for this 
 # https://surprise.readthedocs.io/en/stable/model_selection.html
 from surprise.model_selection import split
+from nyt_bestsellers import TimesBestsellers
+from open_library import OpenLibrary
 
 def load_data():
-    pass
+    #get list of book ISBNs
+    isbn_list = TimesBestsellers().all_books_isbns()
+
 
 class EvaluationData():
     def __init__(self):
