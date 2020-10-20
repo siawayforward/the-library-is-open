@@ -1,4 +1,6 @@
 learning/
 bookmarks_idea.md
-.vscode
+.vscode/
 nyt_bestsellers.py
+__pycache__
+test.py
