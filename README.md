@@ -8,4 +8,4 @@ Onward :muscle:
 
 ## Data
 
-The book information and ratings are compiled from the [Open Library API](https://openlibrary.org/dev/docs/api/books). The list of books itself is compiled from the [New York Times Bestseller's Books API](https://developer.nytimes.com/docs/books-product/1/overview). Because of access key compliance, the file that loads the list of book ISBNs is not included as it is just for the data generation stage.
+The book information and ratings are compiled from the [New York Times Bestseller's Books API](https://developer.nytimes.com/docs/books-product/1/overview). Because of access key compliance, the file that loads the list of books and their details is not included as it is just for the data generation stage.
