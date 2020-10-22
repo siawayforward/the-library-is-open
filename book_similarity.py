@@ -27,20 +27,24 @@ class BookSimilarity:
 
        
     def compute_feature_similarities(self):
-        pass
+        self.create_books_dataframe()
+        self.vectorize_text_features()
+        similarities = cosine_similarity(self.vector_df, self.vector_df)
+        self.similarity_matrix = pd.DataFrame(similarities, self.book_df.index.values[0])
+        #revisit this method - completed when you were sleepy
+        
 
-
-    def process_text_features(self):
-        self.send_to_dataframe()
+    def vectorize_text_features(self):
         # create tfidf vectors
         vectorizer = TfidfVectorizer()
         tfidf_vectors = vectorizer.fit_transform(list(self.book_df['target']))
         tfidf_features = vectorizer.get_feature_names()
         # store values in dataframe with book identifier
-        
+        self.vector_df = pd.DataFrame(tfidf_vectors, columns=tfidf_features)
+        self.vector_df.set_index(self.book_df.title)
 
 
-    def send_to_dataframe(self):
+    def create_books_dataframe(self):
         book_list = []
         for book in self.books:
             book = self.pre_process_book_data(book)
