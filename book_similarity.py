@@ -19,29 +19,26 @@ class BookSimilarity:
         print('Total books:', str(len(books.all_books))) 
 
     
-    def get_book_recommendations(self, text, top_n):
+    def get_book_recommendations(self, title, author, top_n=10):
         '''
-        Get the `top_n` number of recommendations for given `text`
+            Get the `top_n` number of recommendations for given `book_title` and `author`
         '''
-        pass   
+        
 
        
     def compute_feature_similarities(self):
         self.create_books_dataframe()
         self.vectorize_text_features()
-        similarities = cosine_similarity(self.vector_df, self.vector_df)
-        self.similarity_matrix = pd.DataFrame(similarities, self.book_df.index.values[0])
+        similarity_scores = cosine_similarity(self.vector_df)
+        self.sorted_similarities = sorted(self.sorted_similarities)
         #revisit this method - completed when you were sleepy
         
 
     def vectorize_text_features(self):
         # create tfidf vectors
         vectorizer = TfidfVectorizer()
-        tfidf_vectors = vectorizer.fit_transform(list(self.book_df['target']))
-        tfidf_features = vectorizer.get_feature_names()
-        # store values in dataframe with book identifier
-        self.vector_df = pd.DataFrame(tfidf_vectors, columns=tfidf_features)
-        self.vector_df.set_index(self.book_df.title)
+        self.tfidf_vectors = vectorizer.fit_transform(self.book_df['target'])
+        self.tfidf_features = vectorizer.get_feature_names()
 
 
     def create_books_dataframe(self):
@@ -63,3 +60,20 @@ class BookSimilarity:
                                     if w not in stopwords.words('english')])
         # creating dataframe with title, author, synopsis before lemmatizing, vectorizing
         return book    
+
+
+'''
+    DONE - get the list of list names
+    get the list of books from the lists (only store ISBN) 
+    DONE - how do we get all lists from the beginning of time?
+    use descriptions, genre to make recommendations
+    DONE - we could make tdidf vectorizers and use those to calculate cosine-similarity
+    - suggest top 10 books with highest similarity scores
+    engine:
+    - you enter a book title and author
+    - we search the repo of books from NYT best sellers and give a recommendation
+    - if book not in New York Times list, search for book data in open library API
+        = From there, get details of book and then add it to the book_df
+        = calculate its similarity score and add to the similarities list
+
+'''
