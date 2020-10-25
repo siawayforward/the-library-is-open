@@ -1,11 +1,12 @@
 import json
 import requests
 from datetime import datetime, timedelta
+from dataclasses import dataclass
 from time import time
 from collections import namedtuple
 from pprint import pprint
 from retrieve_api_keys import *
-from google_books import *
+from google_books import GoogleBooks
 
 @dataclass
 class Book:
@@ -37,7 +38,6 @@ class TimesBestsellers:
         # get list of ISBNs for books that have appeared on NYT Bestseller lists
         for name in self.list_names:
             self.headers['list'] = name
-            print('\ngetting books history from the {} lists'.format(self.headers['list']))
             start = time()
             while datetime(2000, 1, 1) < self.search_date:
                 self.headers['published-date'] = self.search_date.strftime('%Y-%m-%d')
@@ -63,25 +63,10 @@ class TimesBestsellers:
         titles = {book.title for book in self.all_books}
         authors = {book.author for book in self.all_books}
         if title in titles and authors[titles.index(title)] == author: 
-            return self.all_books[self.all_books.index(title)]
+            pass
         else:
             retrieved_book = GoogleBooks().get_book(title, author)
             if retrieved_book: self.all_books.append(retrieved_book)
             else:
                 self.all_books.append(
                     Book(title=title, author=author, description='', primary_isbn13=0))
-            return retrieved_book
-
-'''
-    DONE - get the list of list names
-    ***get the list of books from the lists (only store ISBN) 
-    DONE - how do we get all lists from the beginning of time?
-    DONE - use descriptions, genre to make recommendations
-    DONE - we could make tdidf vectorizers and use those to calculate cosine-similarity
-    - suggest top 10 books with highest similarity scores
-    engine:
-    DONE - you enter a book title and author
-    DONE - we search the repo of books from NYT best sellers or get it from Google book
-    - give a recommendation based on the NLP tfidf vector similarities
-
-'''
