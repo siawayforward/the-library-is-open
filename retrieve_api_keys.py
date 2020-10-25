@@ -6,4 +6,4 @@ def get_API_keys():
         nyt_key = key_value_pairs.split('google,')[0].split('nyt,')[1].strip()
         google_key = key_value_pairs.split('google, ')[1].strip()
         file.close()
-    return {nyt_key, google_key}
+    return [nyt_key, google_key]
