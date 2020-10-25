@@ -1,6 +1,5 @@
 import requests
 from retrieve_api_keys import *
-from nyt_bestsellers import Book
 
 class GoogleBooks:
     '''
