@@ -5,7 +5,7 @@ from dataclasses import dataclass
 from time import time
 from collections import namedtuple
 from pprint import pprint
-from retrieve_api_keys import *
+from retrieve_api_keys import get_API_keys
 from google_books import GoogleBooks
 
 @dataclass
@@ -36,17 +36,15 @@ class TimesBestsellers:
     def get_book_list(self):
         self.all_books = []
         # get list of ISBNs for books that have appeared on NYT Bestseller lists
-        for name in self.list_names:
-            self.headers['list'] = name
-            start = time()
-            while datetime(2000, 1, 1) < self.search_date:
+        while datetime(2000, 1, 1) < self.search_date:
+            for name in self.list_names:
+                self.headers['list'] = name            
                 self.headers['published-date'] = self.search_date.strftime('%Y-%m-%d')
                 try:
                     self.access_book_from_API(self.headers['list'])
                 except: 
                     print('failing {}'.format(self.headers['published-date']))
-                finally:
-                    self.search_date = self.search_date - timedelta(days=7)
+            self.search_date = self.search_date - timedelta(days=7)
         return self.all_books
 
 
@@ -56,17 +54,5 @@ class TimesBestsellers:
         for book in response.json()['results']:
             txt = book['book_details'][0]
             item = Book(txt['title'], txt['author'], txt['description'], txt['primary_isbn13'])
-            self.all_books.append(item)
-
-
-    def find_book(self, title, author):
-        titles = {book.title for book in self.all_books}
-        authors = {book.author for book in self.all_books}
-        if title in titles and authors[titles.index(title)] == author: 
-            pass
-        else:
-            retrieved_book = GoogleBooks().get_book(title, author)
-            if retrieved_book: self.all_books.append(retrieved_book)
-            else:
-                self.all_books.append(
-                    Book(title=title, author=author, description='', primary_isbn13=0))
+            if item.primary_isbn13 not in [book.primary_isbn13 for book in self.all_books]:
+                 self.all_books.append(item)
