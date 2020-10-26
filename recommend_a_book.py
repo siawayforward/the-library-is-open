@@ -6,10 +6,14 @@ class BookRecommender:
         data, getting a user book selection, and returning recommendations based on that selection
     '''
 
+    def __init__(self, update=False):
+        if update:
+            BookSimilarity().update_book_corpus()
+
     def display_recommendations(self):
-        book_sim = BookSimilarity()
+        bs = BookSimilarity()
         title, author, top_n = self.get_user_conditions()
-        self.recommendations = self.book_sim.get_book_recommendations(title, author, top_n)
+        self.recommendations = bs.get_book_recommendations(title, author, top_n)
 
         print('We think these titles are a great follow-up to {} by {}:'
                 .format(title, author))
@@ -19,7 +23,7 @@ class BookRecommender:
 
 
     def get_user_conditions(self):
-        title = input('What book have you read recently?\n')   
+        title, author = input('What book have you read recently?\n'), None
         while title is None:
             title = input('Uh Oh! We didn\'t get that. What book did you read?\n')
             author = input('OK! What\'re the author\'s first and last names?\n')
@@ -30,5 +34,5 @@ class BookRecommender:
 
 
 #moment of truth
-x = BookRecommender()
-x.display_recommendations()
+#BookSimilarity().update_book_corpus()
+BookRecommender().display_recommendations()
