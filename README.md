@@ -8,4 +8,22 @@ Onward :muscle:
 
 ## Data
 
-The book information and ratings are compiled from the [New York Times Bestseller's Books API](https://developer.nytimes.com/docs/books-product/1/overview). Because of access key compliance, the file that loads the list of books and their details is not included as it is just for the data generation stage.
+The book information and ratings are compiled from the [New York Times Bestseller's Books API](https://developer.nytimes.com/docs/books-product/1/overview). Because of access key compliance, the file that loads the keys is not included as it is just for the data generation stage. Sometimes, a user will search for a title that was not in the Bestseller's list. For that, [Google's Books API](https://developers.google.com/books) is used to get the details of the title in order to still get the user a well-informed recommendation. That key is also read in from the file.
+
+For replication, store your NYT Books and Google books in a `keys.txt` file in the same directory as the other files. The values should be stored on the two lines as follows (copy and paste the below, even with spaces, and just replace the API key strings):
+> nyt, `<api-key-string>`
+> google, `<api-key-string>`
+
+To just run the recommender system with already retrieved data, use the `recommend_a_book.py` script.
+
+## Instructions *
+
+- Download all `.py` files from the repository and the `books.csv` file
+- To run on your terminal, use command
+
+```cmd
+    python recommend_a_book.py
+```
+
+*Currently working on production version
+*The instructions above are for system once completed - still in process
