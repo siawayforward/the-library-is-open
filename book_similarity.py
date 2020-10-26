@@ -1,5 +1,6 @@
 #modules
 from nyt_bestsellers import TimesBestsellers
+from google_books import GoogleBooks
 from time import time
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -11,31 +12,26 @@ import pandas as pd
 class BookSimilarity:
 
     def __init__(self):
-        start = time()
-        nyt = TimesBestsellers()
-        self.books = nyt.get_book_list()
-        # check computation time
-        m, s = str(int((time() - start)//60)), int((time() - start)%60)
-        print('Time: {}:{:02d}m - done getting books history from the all lists\n'.format(m,s))
-        print('Total books:', str(len(self.books))) 
+        self.books = pd.read_csv('books.csv').reset_index()
 
     
     def get_book_recommendations(self, title, author, top_n=10):
         '''
             Get the `top_n` number of recommendations for given `book_title` and `author`
         '''
-        TimesBestsellers().find_book(title, author)
+        GoogleBooks(title, author)
         self.compute_feature_similarities()
-        target = self.book_df[(self.book_df['title'] == title) & self.book_df['author'] == author]
-        recommendations = self.similarity_scores[target.index.item()]
+        target = self.book_df[(self.book_df['title'] == title)].index.values[0]
+        recommendations = self.similarity_scores[target.index.values]
         self.top_recommendations = sorted(recommendations, key=lambda x: x[1])[:top_n]
         return self.top_recommendations
 
 
     def compute_feature_similarities(self):
-        self.create_books_dataframe()
+        #get data from file
+        self.book_df = pd.read_csv('books.csv').reset_index()
         self.vectorize_text_features()
-        self.similarity_scores = cosine_similarity(self.vector_df)
+        self.similarity_scores = cosine_similarity(self.tfidf_vectors)
 
 
     def vectorize_text_features(self):
@@ -45,22 +41,36 @@ class BookSimilarity:
         self.tfidf_features = vectorizer.get_feature_names()
 
 
-    def create_books_dataframe(self):
+    def store_books_data(self):
         book_list = []
         for book in self.books:
             book = self.pre_process_book_data(book)
             item = {'title': book.title, 'author': book.author, 'description': book.description, 
                     'target': book.title + ' ' + book.description, 'isbn13': book.primary_isbn13}
             book_list.append(item)
-        # create dataframe of data
+        # create dataframe of data and save
         self.book_df = pd.DataFrame(book_list)
+        self.book_df.to_csv('books.csv', index=False)
 
     
     def pre_process_book_data(self, book):
         # lower case removing punctuation and stopwords
-        book.title = book.title.lower()
-        book.description = book.description.lower().translate(str.maketrans('', '', punctuation))
-        book.description = ' '.join([w for w in book.description.split()
+        if book:
+            book.title = book.title.lower()
+            book.description = book.description.lower().\
+                            translate(str.maketrans('', '', punctuation))
+            book.description = ' '.join([w for w in book.description.split()\
                                     if w not in stopwords.words('english')])
         # creating dataframe with title, author, synopsis before lemmatizing, vectorizing
         return book    
+
+
+    def update_book_corpus(self):
+        start = time()
+        nyt = TimesBestsellers()
+        self.books = nyt.get_book_list()
+        self.store_books_data()
+        # check computation time
+        m, s = str(int((time() - start)//60)), int((time() - start)%60)
+        print('Time: {}:{:02d}m - done getting books history from the all lists\n'.format(m,s))
+        print('Total books:', str(len(self.books))) 
