@@ -37,7 +37,7 @@ class GoogleBooks:
         books = pd.read_csv('books.csv')
         titles = list(books.title)
         authors = list(books.author)
-        if title in titles and authors[titles.index(title)] == author: 
+        if title in titles and author.lower() in authors[titles.index(title)].lower(): 
             pass
         else: #append to dataframe to update corpus
             retrieved_book = self.get_book()

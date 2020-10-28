@@ -35,6 +35,7 @@ class TimesBestsellers:
 
     def get_book_list(self):
         self.all_books = []
+        self.all_isbns = []
         # get list of ISBNs for books that have appeared on NYT Bestseller lists
         while datetime(2000, 1, 1) < self.search_date:
             for name in self.list_names:
@@ -54,5 +55,6 @@ class TimesBestsellers:
         for book in response.json()['results']:
             txt = book['book_details'][0]
             item = Book(txt['title'], txt['author'], txt['description'], txt['primary_isbn13'])
-            if item.primary_isbn13 not in [book.primary_isbn13 for book in self.all_books]:
+            if item.primary_isbn13 not in self.all_isbns:
                  self.all_books.append(item)
+                 self.all_isbns.append(item.primary_isbn13)
