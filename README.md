@@ -1,6 +1,6 @@
 # the-library-is-open
 
-After learning about APIs and as a fan of machine learning algorithms, this is an attempt at creating a recommender system of books/authors for a user. It was originally supposed to be a book recommender system, but the API to use changed some main components this idea was centered around, so until then, we were going to do poems. However, we come back to books and find a way!
+After learning about APIs and as a fan of machine learning algorithms and systems (the equitable ones anyway), this is an attempt at creating a recommender system of books for a user. It was originally supposed to be a broad book recommender system, but the API to use changed some main components this idea was centered around, so until then, we were going to do poems. However, we came back to books and found a way! To accomplish this, a smaller universe of book selections is used - thanks to The New York Times Bestseller's List.
 
 Also note, this was decided on October 7, 2020 -> Toni Morrison's Nobel Prize winning anniversary (1993) and what also happens to be Toni Braxton's birthday - a day I affectionately call **Toni Day**. It is therefore appropriate to do this with legendary wordsmiths in mind! :blue_heart:
 
@@ -14,6 +14,16 @@ For replication, store your NYT Books and Google books in a `keys.txt` file in t
 > nyt, `<api-key-string>`
 > google, `<api-key-string>`
 
+- Open the `recommend_a_book.py` script and change line 38 to appear as follows so `update=True`:
+
+```python
+    BookRecommender(update=True).display_recommendations()
+```
+
+Note, this will take a good amount of time to run, so have dinner and watch an episode of The Big Bang Theory or Twenties while waiting. My hope is that the next phase will include time optimizations as the main refactoring goal.
+
+---
+
 To just run the recommender system with already retrieved data, use the `recommend_a_book.py` script.
 
 ## Instructions *
@@ -25,5 +35,6 @@ To just run the recommender system with already retrieved data, use the `recomme
     python recommend_a_book.py
 ```
 
-*Currently working on production version
+*The above instructions are for the phase 1 completion which is just a recommender system with no user interface  
+*Currently working on production version  
 *The instructions above are for system once completed - still in process
