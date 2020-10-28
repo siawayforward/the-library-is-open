@@ -35,5 +35,4 @@ class BookRecommender:
 
 
 #moment of truth
-#BookSimilarity().update_book_corpus()
-BookRecommender().display_recommendations()
+BookRecommender(update=False).display_recommendations()
