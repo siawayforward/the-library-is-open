@@ -22,16 +22,16 @@ class BookSimilarity:
         GoogleBooks(title, author)
         self.compute_feature_similarities()
         target = self.book_df[(self.book_df['title'] == title)].index.values[0]
-        recommendations = self.similarity_scores[target.index.values]
-        self.top_recommendations = sorted(recommendations, key=lambda x: x[1])[:top_n]
-        return self.top_recommendations
+        pairs = list(enumerate(self.similarities[target]))
+        self.recommendations = sorted(pairs, key=lambda x:x[1], reverse=True)[0:top_n]
+        return self.recommendations
 
 
     def compute_feature_similarities(self):
         #get data from file
         self.book_df = pd.read_csv('books.csv').reset_index()
         self.vectorize_text_features()
-        self.similarity_scores = cosine_similarity(self.tfidf_vectors)
+        self.similarities = cosine_similarity(self.tfidf_vectors)
 
 
     def vectorize_text_features(self):
@@ -45,7 +45,9 @@ class BookSimilarity:
         book_list = []
         for book in self.books:
             book = self.pre_process_book_data(book)
-            item = {'title': book.title, 'author': book.author, 'description': book.description, 
+            if book.title and book.description and book.author and book.primary_isbn13:
+                item = {'title': book.title, 'author': book.author, 
+                    'description': book.description, 
                     'target': book.title + ' ' + book.description, 'isbn13': book.primary_isbn13}
             book_list.append(item)
         # create dataframe of data and save
@@ -55,8 +57,9 @@ class BookSimilarity:
     
     def pre_process_book_data(self, book):
         # lower case removing punctuation and stopwords
-        if book:
+        if book.title:
             book.title = book.title.lower()
+        if book.description:
             book.description = book.description.lower().\
                             translate(str.maketrans('', '', punctuation))
             book.description = ' '.join([w for w in book.description.split()\
