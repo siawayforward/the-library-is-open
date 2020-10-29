@@ -44,7 +44,7 @@ class GoogleBooks:
             if retrieved_book: books.append(retrieved_book, ignore_index=True)
             else:
                 books.append(
-                    {'title': title, 'author': author, 'description': '', 'primary_isbn13': 0},
+                    {'title': title, 'author': author, 'description': title, 'primary_isbn13': 0},
                     ignore_index = True)
         #resave data
         books.to_csv('books.csv', index=False)
