@@ -38,3 +38,10 @@ To just run the recommender system with already retrieved data, use the `recomme
 *The above instructions are for the phase 1 completion which is just a recommender system with no user interface  
 *Currently working on production version  
 *The instructions above are for system once completed - still in process
+
+### Known Issues
+
+- Book retrieval and startup are slow processes
+- Can only get good recommendations if the author's name and book title are entered correctly (it is OK if the entry is mixed case)
+- The recommendations are currently only for English language books. The hope is to keep building and making it more inclusive
+- The book selections are mainly from the NYT Bestsellers list in the new millenium. This is a scope issue. The list of books will grow with more improvements for time and space complexity efficiencies.
