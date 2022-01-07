@@ -54,7 +54,6 @@ class TimesBestsellers:
 
     def get_book_list(self):
         # get list of ISBNs for books that have appeared on NYT Bestseller lists
-        start = time()
         self.all_books, self.all_isbns = [], []
         for lbl in self.list_names:
             while dt.strptime(lbl['first'], self.dt) < dt.strptime(lbl['current'], self.dt):
@@ -67,7 +66,7 @@ class TimesBestsellers:
                     pass
                 new_date = dt.strptime(lbl['current'], self.dt) - timedelta(days=lbl['cadence'])
                 lbl['current'] = new_date.strftime(self.dt)
-        self.store_books_data(lbl['name'])
+        self.store_books_data()
 
 
     def access_book_from_API(self):
@@ -82,23 +81,29 @@ class TimesBestsellers:
                     'weeks': int(book['weeks_on_list']),
                     'rating': None}
             #we want books that appeared enough times on the list to be captured. One hit wonders, sorry!
-            if item['isbn13'] not in self.all_isbns and item['weeks'] >= 5:
+            if item['isbn13'] not in self.all_isbns: #and item['weeks'] >= 5:
                     self.all_books.append(item)
                     self.all_isbns.append(item['isbn13'])
 
 
-    def store_books_data(self, category):
-        b4_ct = len(self.all_books)
+    def store_books_data(self):
         for book in self.all_books:
             book = pre_process_book_data(book)
             if book['title'] and book['description'] and book['author'] and book['isbn13']:
                 book['target'] = book['title'] + ' ' + book['author'] + ' ' + book['description']
+        #alert for number of books added
+        m, s = str(int((time() - start)//60)), int((time() - start)%60)
+        print('Total books so far:', str(len(self.all_books)), 'now at {}:{:02d}m'.format(m,s))
         # create dataframe of data and save 
         self.book_df = pd.DataFrame(self.all_books)
         self.book_df.to_csv('all_books.csv', index=False)
+        #logging
         m, s = str(int((time() - start)//60)), int((time() - start)%60)
-        print('Total books:', str(len(self.all_books)-b4_ct), 'now at {}:{:02d}m'.format(m,s))
-
+        print('Total books:', str(len(self.all_books)), 'now at {}:{:02d}m'.format(m,s))
+        
+        
+#add a method to update the repo i.e. if we were to update the whole book list, we could start from
+# the last time we did this like by latest publication date or release date. Total books so far: 2532 now at 74:21m
 
 
 
