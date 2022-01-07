@@ -1,22 +1,30 @@
 import json
 import requests
-from datetime import datetime, timedelta
+from datetime import datetime as dt, timedelta
 from dataclasses import dataclass
 from time import time
+import pandas as pd
 from collections import namedtuple
-from pprint import pprint
+from pprint import PrettyPrinter
 from retrieve_api_keys import get_API_keys
-from google_books import GoogleBooks
+from nltk.corpus import stopwords
+from string import punctuation
 
-@dataclass
-class Book:
-    '''
-        store the details of a book that has appeared on the New York Times Bestseller list
-    '''
-    title: str
-    author: str
-    description: str
-    primary_isbn13: int
+pp = PrettyPrinter(indent=4)
+
+
+
+def pre_process_book_data(book):
+    # lower case removing punctuation and stopwords
+    if book['title']:
+        book['title'] = book['title'].lower()
+    if book['description']:
+        book['description'] = book['description'].lower().\
+                        translate(str.maketrans('', '', punctuation))
+        book['description'] = ' '.join([w for w in book['description'].split()\
+                                if w not in stopwords.words('english')])
+    return book
+
 
 
 class TimesBestsellers:
@@ -26,35 +34,84 @@ class TimesBestsellers:
     '''
     def __init__(self):
         self.list_ep = 'https://api.nytimes.com/svc/books/v3/lists'
-        self.search_date = datetime.now() # debut date of NYT Bestsellers is Oct 12 1931
-        self.list_names = ['hardcover-fiction', 'hardcover-nonfiction', 'paperback-nonfiction',
-                           'paperback-books', 'young-adult-paperback']
-        self.headers = {'api-key': get_API_keys()[0],
-                        'published-date': None, 'list': None}    
+        self.list_names_ep = 'https://api.nytimes.com/svc/books/v3/lists/names'
+        self.headers = {'api-key': get_API_keys()[0]}    
+        self.dt = '%Y-%m-%d'
+        self.get_lists()
 
 
-    def get_book_list(self):
-        self.all_books = []
-        self.all_isbns = []
+    def get_lists(self):
+        self.list_names = []
+        response = requests.get(self.list_names_ep, params=self.headers)
+        for result in response.json()['results']:
+            cadence, cadence_days = result['updated'], 7 #weekly as default
+            if cadence == 'MONTHLY':
+                cadence_days = 30
+            self.list_names.append({'name': result['list_name_encoded'], 'cadence': cadence_days,
+                                    'first': result['oldest_published_date'],
+                                    'current': result['newest_published_date']})
+
+
+    def get_book_list(self, name):
         # get list of ISBNs for books that have appeared on NYT Bestseller lists
-        while datetime(2000, 1, 1) < self.search_date:
-            for name in self.list_names:
-                self.headers['list'] = name            
-                self.headers['published-date'] = self.search_date.strftime('%Y-%m-%d')
+        start = time()
+        self.all_books, self.all_isbns = [], []
+        for lbl in self.list_names[4:6]:
+            while dt.strptime(lbl['first'], self.dt) < dt.strptime(lbl['current'], self.dt):       
+                published_date = dt.strptime(lbl['current'],self.dt).strftime('%Y-%d-%m')
                 try:
-                    self.access_book_from_API(self.headers['list'])
+                    self.access_book_from_API(lbl[name])
+                    print('\nhave {} books history from the {} lists on {}'
+                                .format(len(self.all_books), lbl['name'], published_date))
                 except: 
-                    print('failing {}'.format(self.headers['published-date']))
-            self.search_date = self.search_date - timedelta(days=7)
-        return self.all_books
+                    pass
+                new_date = dt.strptime(lbl['current'], self.dt) - timedelta(days=lbl['cadence'])
+                lbl['current'] = new_date.strftime(self.dt)
+            self.store_books_data(lbl['name'])
 
 
-    def access_book_from_API(self, name):
-        print('\ngetting books history from the {} lists'.format(name))
+    def access_book_from_API(self):
         response = requests.get(self.list_ep, params=self.headers)
+        print('retrieving books, how many items there?', len(response.json()['results']))
+        print('example book', response.json(['results']))
         for book in response.json()['results']:
             txt = book['book_details'][0]
-            item = Book(txt['title'], txt['author'], txt['description'], txt['primary_isbn13'])
-            if item.primary_isbn13 not in self.all_isbns:
-                 self.all_books.append(item)
-                 self.all_isbns.append(item.primary_isbn13)
+            item = {'genre': txt['display_name'],
+                    'title': txt['title'], 
+                    'author': txt['author'], 
+                    'description': txt['description'],
+                    'isbn13': txt['primary_isbn13'],
+                    'weeks': int(book['weeks_on_list']),
+                    'rating': None}
+            #we want books that appeared enough times on the list to be captured. One hit wonders, sorry!
+            if item['primary_isbn13'] not in self.all_isbns and item['weeks'] >= 5:
+                self.all_books.append(item)
+                self.all_isbns.append(item['primary_isbn13'])
+
+
+    def store_books_data(self, category):
+        for book in self.all_books:
+            book = pre_process_book_data(book)
+            if book['title'] and book['description'] and book['author'] and book['primary_isbn13']:
+                book['target'] = book['title'] + ' ' + book['author'] + ' ' + book['description']
+        # create dataframe of data and save
+        print('Total {} books:'.format(category), str(len(self.all_books))) 
+        self.book_df = pd.DataFrame(self.all_books)
+        self.book_df.to_csv('books_{}.csv'.format(category), index=False)
+        m, s = str(int((time() - start)//60)), int((time() - start)%60)
+        print('Time: {}:{:02d}m - done getting books history from the all lists\n'.format(m,s))
+
+
+
+
+
+
+
+start = time()
+nyt = TimesBestsellers()
+nyt.get_book_list()
+'''
+test = nyt.list_names[0]['current']
+print(test)
+print(datetime.strptime(test, nyt.dt))
+'''
