@@ -35,7 +35,7 @@ class TimesBestsellers:
     def __init__(self):
         self.list_ep = 'https://api.nytimes.com/svc/books/v3/lists'
         self.list_names_ep = 'https://api.nytimes.com/svc/books/v3/lists/names'
-        self.headers = {'api-key': get_API_keys()[0]}    
+        self.headers = {'api-key': get_API_keys()[0], 'list': None, 'published_date': None}    
         self.dt = '%Y-%m-%d'
         self.get_lists()
 
@@ -52,17 +52,17 @@ class TimesBestsellers:
                                     'current': result['newest_published_date']})
 
 
-    def get_book_list(self, name):
+    def get_book_list(self):
         # get list of ISBNs for books that have appeared on NYT Bestseller lists
         start = time()
         self.all_books, self.all_isbns = [], []
-        for lbl in self.list_names[4:6]:
-            while dt.strptime(lbl['first'], self.dt) < dt.strptime(lbl['current'], self.dt):       
-                published_date = dt.strptime(lbl['current'],self.dt).strftime('%Y-%d-%m')
+        for lbl in self.list_names:
+            while dt.strptime(lbl['first'], self.dt) < dt.strptime(lbl['current'], self.dt):
+                #store params in headers object that will be used to send the API request       
+                self.headers['published_date'] = dt.strptime(lbl['current'],self.dt).strftime('%Y-%d-%m')
+                self.headers['list'] = lbl['name']
                 try:
-                    self.access_book_from_API(lbl[name])
-                    print('\nhave {} books history from the {} lists on {}'
-                                .format(len(self.all_books), lbl['name'], published_date))
+                    self.access_book_from_API()
                 except: 
                     pass
                 new_date = dt.strptime(lbl['current'], self.dt) - timedelta(days=lbl['cadence'])
@@ -72,11 +72,9 @@ class TimesBestsellers:
 
     def access_book_from_API(self):
         response = requests.get(self.list_ep, params=self.headers)
-        print('retrieving books, how many items there?', len(response.json()['results']))
-        print('example book', response.json(['results']))
         for book in response.json()['results']:
             txt = book['book_details'][0]
-            item = {'genre': txt['display_name'],
+            item = {'genre': response.json()['results'][0]['display_name'],
                     'title': txt['title'], 
                     'author': txt['author'], 
                     'description': txt['description'],
@@ -84,22 +82,21 @@ class TimesBestsellers:
                     'weeks': int(book['weeks_on_list']),
                     'rating': None}
             #we want books that appeared enough times on the list to be captured. One hit wonders, sorry!
-            if item['primary_isbn13'] not in self.all_isbns and item['weeks'] >= 5:
-                self.all_books.append(item)
-                self.all_isbns.append(item['primary_isbn13'])
+            if item['isbn13'] not in self.all_isbns and item['weeks'] >= 5:
+                    self.all_books.append(item)
+                    self.all_isbns.append(item['isbn13'])
 
 
     def store_books_data(self, category):
         for book in self.all_books:
             book = pre_process_book_data(book)
-            if book['title'] and book['description'] and book['author'] and book['primary_isbn13']:
+            if book['title'] and book['description'] and book['author'] and book['isbn13']:
                 book['target'] = book['title'] + ' ' + book['author'] + ' ' + book['description']
-        # create dataframe of data and save
-        print('Total {} books:'.format(category), str(len(self.all_books))) 
+        # create dataframe of data and save 
         self.book_df = pd.DataFrame(self.all_books)
         self.book_df.to_csv('books_{}.csv'.format(category), index=False)
         m, s = str(int((time() - start)//60)), int((time() - start)%60)
-        print('Time: {}:{:02d}m - done getting books history from the all lists\n'.format(m,s))
+        print('Total {} books:'.format(category), str(len(self.all_books)), 'took {}:{:02d}m'.format(m,s))
 
 
 
