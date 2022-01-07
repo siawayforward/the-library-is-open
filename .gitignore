@@ -4,4 +4,6 @@ bookmarks_idea.md
 __pycache__
 test.py
 keys.txt
-*.csv
+book_*.csv
+books_*.csv
+*old*.csv
