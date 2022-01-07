@@ -67,7 +67,7 @@ class TimesBestsellers:
                     pass
                 new_date = dt.strptime(lbl['current'], self.dt) - timedelta(days=lbl['cadence'])
                 lbl['current'] = new_date.strftime(self.dt)
-            self.store_books_data(lbl['name'])
+        self.store_books_data(lbl['name'])
 
 
     def access_book_from_API(self):
@@ -88,15 +88,16 @@ class TimesBestsellers:
 
 
     def store_books_data(self, category):
+        b4_ct = len(self.all_books)
         for book in self.all_books:
             book = pre_process_book_data(book)
             if book['title'] and book['description'] and book['author'] and book['isbn13']:
                 book['target'] = book['title'] + ' ' + book['author'] + ' ' + book['description']
         # create dataframe of data and save 
         self.book_df = pd.DataFrame(self.all_books)
-        self.book_df.to_csv('books_{}.csv'.format(category), index=False)
+        self.book_df.to_csv('all_books.csv', index=False)
         m, s = str(int((time() - start)//60)), int((time() - start)%60)
-        print('Total {} books:'.format(category), str(len(self.all_books)), 'took {}:{:02d}m'.format(m,s))
+        print('Total books:', str(len(self.all_books)-b4_ct), 'now at {}:{:02d}m'.format(m,s))
 
 
 
