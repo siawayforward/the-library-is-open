@@ -4,3 +4,4 @@ bookmarks_idea.md
 __pycache__
 test.py
 keys.txt
+*.csv
