@@ -6,14 +6,15 @@ class BookRecommender:
         data, getting a user book selection, and returning recommendations based on that selection
     '''
 
+    # only run this to update total book list during down times
     def __init__(self, update=False):
         if update:
             BookSimilarity().update_book_corpus()
 
-
-    def display_recommendations(self):
+    # get recommendations based on what the user has entered
+    def display_recommendations(self, book_title, book_author, n=6):
         bs = BookSimilarity()
-        title, author, top_n = self.get_user_conditions()
+        title, author, top_n = book_title, book_author, n
         self.recommendations = bs.get_book_recommendations(title, author, top_n)
         print('We think these titles are great follow-ups to {} by {}:'
                 .format(title.title(), author.title()))
