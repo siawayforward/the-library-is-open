@@ -1,0 +1,4 @@
+jsonschema<3,>=2.5
+clarifai==2.6.2
+tornado>=6.1
+streamlit
