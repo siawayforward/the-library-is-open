@@ -26,4 +26,4 @@ class BookRecommender:
 
 
 #moment of truth (testing here)
-BookRecommender(update=False).display_recommendations("my sister's keeper", "picoult")
+BookRecommender(update=False).display_recommendations("the vanishing half", "brit bennett")
