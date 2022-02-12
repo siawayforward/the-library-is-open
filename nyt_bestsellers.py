@@ -1,10 +1,8 @@
 import json
 import requests
 from datetime import datetime as dt, timedelta
-from dataclasses import dataclass
 from time import time
 import pandas as pd
-from collections import namedtuple
 from pprint import PrettyPrinter
 from retrieve_api_keys import get_API_keys
 from nltk.corpus import stopwords
