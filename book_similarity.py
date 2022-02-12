@@ -33,5 +33,5 @@ class BookSimilarity:
     def vectorize_text_features(self):
         # create tfidf vectors
         vectorizer = TfidfVectorizer()
-        self.tfidf_vectors = vectorizer.fit_transform(self.books['target'].replace(np.nan, 0))
+        self.tfidf_vectors = vectorizer.fit_transform(self.books['target'].replace(np.nan, "n/a"))
         self.tfidf_features = vectorizer.get_feature_names()   
