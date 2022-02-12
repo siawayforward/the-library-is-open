@@ -1,9 +1,9 @@
 #modules
 from google_books import GoogleBooks
-from time import time
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.feature_extraction.text import TfidfVectorizer
 import pandas as pd
+import numpy as np
 
 
 class BookSimilarity:
@@ -33,5 +33,5 @@ class BookSimilarity:
     def vectorize_text_features(self):
         # create tfidf vectors
         vectorizer = TfidfVectorizer()
-        self.tfidf_vectors = vectorizer.fit_transform(self.books['target'])
+        self.tfidf_vectors = vectorizer.fit_transform(self.books['target'].replace(np.nan, 0))
         self.tfidf_features = vectorizer.get_feature_names()   
