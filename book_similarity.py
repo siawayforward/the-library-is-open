@@ -9,7 +9,7 @@ import numpy as np
 class BookSimilarity:
 
     def __init__(self):
-        self.books = pd.read_csv('all_books.csv').reset_index()
+        self.book_df = pd.read_csv('all_books.csv').reset_index()
 
     
     def get_book_recommendations(self, title, author, top_n=10):
@@ -33,5 +33,5 @@ class BookSimilarity:
     def vectorize_text_features(self):
         # create tfidf vectors
         vectorizer = TfidfVectorizer()
-        self.tfidf_vectors = vectorizer.fit_transform(self.books['target'].replace(np.nan, "n/a"))
-        self.tfidf_features = vectorizer.get_feature_names()   
+        self.tfidf_vectors = vectorizer.fit_transform(self.book_df['target'].replace(np.nan, "n/a"))
+        self.tfidf_features = vectorizer.get_feature_names_out()   
