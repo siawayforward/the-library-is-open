@@ -1,5 +1,4 @@
 #modules
-from nyt_bestsellers import TimesBestsellers
 from google_books import GoogleBooks
 from time import time
 from sklearn.metrics.pairwise import cosine_similarity
