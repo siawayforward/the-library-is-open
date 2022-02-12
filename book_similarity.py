@@ -9,7 +9,7 @@ import pandas as pd
 class BookSimilarity:
 
     def __init__(self):
-        self.books = pd.read_csv('books_updated.csv').reset_index()
+        self.books = pd.read_csv('all_books.csv').reset_index()
 
     
     def get_book_recommendations(self, title, author, top_n=10):
