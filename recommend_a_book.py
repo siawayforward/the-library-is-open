@@ -14,6 +14,7 @@ class BookRecommender:
     # get recommendations based on what the user has entered
     def display_recommendations(self, book_title, book_author, n=6):
         bs = BookSimilarity()
+        print("its running here --- dspaly method")
         title, author, top_n = book_title, book_author, n
         self.recommendations = bs.get_book_recommendations(title, author, top_n)
         print('We think these titles are great follow-ups to {} by {}:'
@@ -24,16 +25,5 @@ class BookRecommender:
                 print(book_row['title'].title(),'by', book_row['author'].title())
 
 
-    def get_user_conditions(self):
-        title, author = input('What book have you read recently?\n'), None
-        while title is None:
-            title = input('Uh Oh! We didn\'t get that. What book did you read?\n')
-        author = input('OK! What\'re the author\'s first and last names?\n')
-        while author is None:
-            author = input('We missed that author! Who wrote {} again?\n'.format(title))     
-        return title, author, 6
-
-
-
-#moment of truth
-BookRecommender(update=False).display_recommendations()
+#moment of truth (testing here)
+BookRecommender(update=False).display_recommendations("my sister's keeper", "picoult")
