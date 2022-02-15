@@ -14,15 +14,9 @@ class BookRecommender:
     # get recommendations based on what the user has entered
     def display_recommendations(self, book_title, book_author, n=6):
         bs = BookSimilarity()
-        print("its running here --- dspaly method")
         title, author, top_n = book_title, book_author, n
         self.recommendations = bs.get_book_recommendations(title, author, top_n)
-        print('We think these titles are great follow-ups to {} by {}:'
-                .format(title.title(), author.title()))
-        for book in self.recommendations:
-            book_row = bs.book_df.iloc[book[0]] 
-            if int(book[1]) != 1:
-                print(book_row['title'].title(),'by', book_row['author'].title())
+        return self.recommendations
 
 
 #moment of truth (testing here)
