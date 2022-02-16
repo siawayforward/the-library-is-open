@@ -6,6 +6,10 @@ Also note, this was decided on October 7, 2020 -> Toni Morrison's Nobel Prize wi
 
 Onward :muscle:
 
+## Status
+
+In refactor mode, `main_run` does not work as of 2.15.2022
+
 ## Data
 
 The book information and ratings are compiled from the [New York Times Bestseller's Books API](https://developer.nytimes.com/docs/books-product/1/overview). Because of access key compliance, the file that loads the keys is not included as it is just for the data generation stage. Sometimes, a user will search for a title that was not in the Bestseller's list. For that, [Google's Books API](https://developers.google.com/books) is used to get the details of the title in order to still get the user a well-informed recommendation. That key is also read in from the file.
