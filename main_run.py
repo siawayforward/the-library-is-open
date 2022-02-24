@@ -9,8 +9,9 @@ st.title("The Library is Open!")
 
 # description and image
 st.text("""
-        As a huge fan of Drag Race, the name of this is inspired by RuPaul's Drag Race. Ru, I don't intend
-        to make money from this so you still own 51% of that whole company, ma'am. Much love!
+        As a huge fan of Drag Race, the name of this is inspired by RuPaul's Drag Race. Ru, 
+        I don't intend to make money from this so you still own 51% of that whole company, 
+        ma'am. Much love!
         """)
 image = Image.open('rupaul-library.gif')
 st.image(image, "Ru Paul noting to the queens in the reading challenge that the library is indeed about to be OPEN!")
