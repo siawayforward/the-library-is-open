@@ -16,7 +16,7 @@ class BookRecommender:
     # check if corpus has this book before finding recommendations (come back to change print statements)
     def find_book(title=None, author=None):
         books = pd.read_csv('all_books.csv')
-        isbns = list(books.primary_isbn13)
+        isbns = list(books.isbn13)
         gb = GoogleBooks(title, author)
         retrieved_book = gb.get_book()
         if int(retrieved_book['isbn13']) in isbns: 
