@@ -19,7 +19,7 @@ class BookRecommender:
         isbns = list(books.isbn13)
         gb = GoogleBooks(title, author)
         retrieved_book = gb.get_book()
-        if int(retrieved_book['isbn13']) in isbns: 
+        if retrieved_book and int(retrieved_book['primary_isbn13']) in isbns: 
             print('book already there')
         else: #append to dataframe to update corpus if it isn't already there
             if retrieved_book: 
