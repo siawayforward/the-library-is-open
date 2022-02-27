@@ -2,7 +2,7 @@ learning/
 bookmarks_idea.md
 .vscode/
 __pycache__
-test.py
+test.*
 keys.txt
 book_*.csv
 books_*.csv
