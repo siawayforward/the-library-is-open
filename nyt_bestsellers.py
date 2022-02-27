@@ -7,6 +7,7 @@ from pprint import PrettyPrinter
 from retrieve_api_keys import get_API_keys
 from nltk.corpus import stopwords
 from string import punctuation
+import streamlit as st
 
 pp = PrettyPrinter(indent=4)
 
@@ -33,7 +34,8 @@ class TimesBestsellers:
     def __init__(self):
         self.list_ep = 'https://api.nytimes.com/svc/books/v3/lists'
         self.list_names_ep = 'https://api.nytimes.com/svc/books/v3/lists/names'
-        self.headers = {'api-key': get_API_keys()[0], 'list': None, 'published_date': None}    
+        #self.headers = {'api-key': get_API_keys()[0], 'list': None, 'published_date': None}    
+        self.headers = {'api-key': st.secrets.api_keys.nyt, 'list': None, 'published_date': None}    
         self.dt = '%Y-%m-%d'
         self.get_lists()
 
