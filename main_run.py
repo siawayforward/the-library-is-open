@@ -37,22 +37,25 @@ with st.form(key='ask_form', clear_on_submit=True):
             loadstate = st.text('Let\'see about this one!')
             books = br.find_book(title, author)
 
-            loadstate.text('Found your book! Finding you recommendations...')
-            recommendations = br().display_recommendations(title.lower(), author.lower())
+            try:
+                recommendations = br().display_recommendations(title.lower(), author.lower())
+                loadstate.text('Found your book! Finding you recommendations...')
 
-            recommendations_header = 'We think these titles are great follow-ups to **{}** by **{}**:'\
-                .format(title.title(), author.title())
-            no_recs = 'Sorry, we couldn\'t find your next obsession this time :('
+                recommendations_header = 'We think these titles are great follow-ups to **{}** by **{}**:'\
+                    .format(title.title(), author.title())
+                no_recs = 'Sorry, we couldn\'t find your next obsession this time :('
 
-            if len(recommendations) > 1:
-                header = st.info(recommendations_header)
-                # display recommendations
-                for book in recommendations:
-                    book_row = books.iloc[book[0]] 
-                    if int(book[1]) != 1:
-                        st.write("-",book_row['title'].title(),'by', book_row['author'].title())
-            else:
-                st.info(no_recs)
+                if len(recommendations) > 1:
+                    header = st.info(recommendations_header)
+                    # display recommendations
+                    for book in recommendations:
+                        book_row = books.iloc[book[0]] 
+                        if int(book[1]) != 1:
+                            st.write("-",book_row['title'].title(),'by', book_row['author'].title())
+                else:
+                    st.info(no_recs)
+            except:
+                st.info("Yikes, this wasn't on the bestsellers list, but we'll improve to add it to our list!")
 
     # clearing results
     reset_button = st.form_submit_button("Can we start over?")
