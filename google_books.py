@@ -2,7 +2,7 @@ import requests
 import pandas as pd
 from retrieve_api_keys import get_API_keys
 from pprint import PrettyPrinter
-
+import streamlit as st
 
 
 pp = PrettyPrinter(indent=4)
@@ -14,7 +14,8 @@ class GoogleBooks:
         reader
     '''
     def __init__(self, title=None, author=None):
-        self.headers = {'api-key': get_API_keys()[1], 'q': None, 'inauthor': None}
+        #self.headers = {'api-key': get_API_keys()[1], 'q': None, 'inauthor': None}
+        self.headers = {'api-key': st.secrets.api_keys.google, 'q': None, 'inauthor': None}
         self.book_ep = 'https://www.googleapis.com/books/v1/volumes'
         if title: self.headers['q'] = title
         if author: self.headers['inauthor'] = author
