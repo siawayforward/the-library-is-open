@@ -8,8 +8,6 @@ Onward :muscle:
 
 ## Status
 
-In refactor mode, `main_run` does not work as of 2.15.2022
-
 As of 2.26.2022, [hosted on streamlit](https://share.streamlit.io/siawayforward/the-library-is-open/main/main_run.py)
 
 ## Data
@@ -34,8 +32,8 @@ Note, this will take a good amount of time to run, so have dinner and watch an e
 
 To just run the recommender system with already retrieved data:
 
-- Navigate to streamlit app page
-- Enter book read, and click `Run Me`
+- Navigate to [streamlit app page](https://share.streamlit.io/siawayforward/the-library-is-open/main/main_run.py)
+- Enter book read, and click `Run Me`. You have to enter both the `title` and `author`, otherwise you will be prompted to enter again
 - To start over, click `Can we start over?`
 - If book is not found in corpus, message will appear to notify you.
 
